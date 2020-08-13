@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  {{!-- Document Settings --}}
+  <meta charset="UTF-8" />
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" /> {{!-- Page Meta --}}
+  <meta name="HandheldFriendly" content="true" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <title>{{meta_title}}</title>
+
+  <link rel="stylesheet" type="text/css" href="{{asset "gitbook322/style.css"}}">
+  <link rel="stylesheet" type="text/css" href="{{asset "gitbook322/gitbook-plugin-highlight/website.css"}}">
+  <link rel="stylesheet" type="text/css" href="{{asset "gitbook322/gitbook-plugin-fontsettings/website.css"}}">
+  <style type="text/css">
+    .hidden {
+      display: none;
+    }
+
+    .blog-title {
+      margin: 0 auto 16px;
+      margin: 0 auto 1rem;
+      font-size: 24px;
+      font-size: 1.5rem;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    .summary .tag-fold {
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .summary .tag-fold:hover {
+      color: rgba(230, 130,44, 1);
+    }
+  </style>
+  {{!-- Ghost outputs important style and meta data with this tag --}}
+  {{ghost_head}}
+</head>
+
+<body class="{{body_class}}">
+
+  <div class="book">
+    <!-- 目录 -->
+    <div class="book-summary" id="J-blog-tree">
+
+      <nav role="navigation">
+        <ul class="summary" id="J-blog-tree-tags">
+          <li>
+            <h1 class="blog-title"><a href="/">{{@site.title}}</a></h1>
+          </li>
+          <li class="divider"></li>
+
+          {{#get "tags" limit="all" includes="slug" order="name" }}
+          {{#foreach tags}}
+          <li class="chapter">
+            <span class="tag-fold">{{name}}</span>
+            <!-- J-blog-tree-posts 将对应的文章拷贝到 tag 下 -->
+            <ul id="J-blog-tree-posts" class="articles J-blog-tree-posts" data-tag="{{name}}">
+              {{#get "posts" filter="tag:{{slug}}" includes="tags, title" limit="all"}}
+              {{#foreach posts}}
+              <li class="chapter J-post" data-slug="{{slug}}">
+                <a href="/{{slug}}">{{title}}</a>
+              </li>
+              {{/foreach}}
+              {{/get}}
+            </ul>
+          </li>
+          {{/foreach}}
+          {{/get}}
+
+          <li class="divider"></li>
+
+          <!-- J-untaged-posts 没有分类的文章列表 -->
+          <div class="J-untaged-posts"></div>
+
+          <li class="divider"></li>
+        </ul>
+      </nav>
+
+      <!-- J-posts-all-hidden 所有文章列表，不显示在页面上 -->
+      <div id="J-posts-all-hidden" class="hidden">
+        {{#get "posts" include="tags, title" order="title" limit=@config.posts_per_page}}
+        {{#foreach posts}}
+        <!-- J-post 文章，data-slug 文章标识 -->
+        <li class="chapter J-post" data-slug="{{slug}}">
+          <a href="/{{slug}}/" data-id="{{comment_id}}" title="{{title}}">{{title}}</a>
+          <div class="post-tags hidden">
+            {{#foreach tags}}
+            <span class="J-tag">{{name}}</span>
+            {{/foreach}}
+          </div>
+        </li>
+        {{/foreach}}
+        {{/get}}
+      </div>
+    </div>
+
+    <!-- 文章内容区域 -->
+    <div class="book-body">
+      <div class="body-inner">
+        <!-- 头部区域 -->
+        <div class="book-header" role="navigation">
+          <h1 style="opacity: 1;">
+            <i class="fa fa-circle-o-notch fa-spin"></i>
+            <a href="/">{{meta_title}}</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+            <div id="pjax">
+              {{{body}}}
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      var gitbook = gitbook || [];
+      gitbook.push(function () {
+        gitbook.page.hasChanged({
+          "page": {
+            "title": "{{meta_title}}"
+          },
+          "config": {
+            "gitbook": "*",
+            "theme": "default",
+            "variables": {},
+            "pluginsConfig": {
+              "highlight": {},
+              "fontsettings": { "theme": "white", "family": "sans", "size": 2 },
+              "theme-default": { "styles": { "website": "styles/website.css", "ebook": "styles/ebook.css" }, "showLevel": false }
+            },
+            "styles": { "website": "styles/website.css", "ebook": "styles/ebook.css", "print": "styles/print.css" }
+          },
+          "file": {
+          },
+          "gitbook": { "version": "3.2.3" },
+          "basePath": ".",
+          "book": { "language": "" }
+        });
+      });
+    </script>
+  </div>
+  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/2.2.0/jquery.js"></script>
+  <script type="text/javascript" src="{{asset "gitbook322/gitbook.js"}}"></script>
+  <script type="text/javascript" src="{{asset "js/jquery-pjax.min.js"}}"></script>
+  <script type="text/javascript" src="{{asset "gitbook322/theme.js"}}"></script>
+  <script type="text/javascript" src="{{asset "gitbook322/gitbook-plugin-fontsettings/fontsettings.js"}}"></script>
+  <script type="text/javascript" src="{{asset "js/pjax-script.js"}}"></script>
+  <script type="text/javascript" src="{{asset "js/blog-tree.js"}}"></script>
+  <script type="text/javascript" src="{{asset "plugin/prism.js"}}"></script>
+
+  {{ghost_foot}}
+</body>
+
+</html>
